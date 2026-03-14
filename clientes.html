@@ -1,0 +1,41 @@
+{% extends "base.html" %} <!-- puxa direto da base.html -->
+
+{% block content %} <!--bloco a ser preenchido com outros templates -->
+<h2>Gestão de Clientes</h2>
+
+<div class="card"> <!--parte para formulario de cadastro -->
+    <h3>Cadastrar Novo Cliente</h3>
+    <form method="POST"> <!--formulario para cadastrar cliente -->
+        <input type="text" name="nome" placeholder="Nome Completo" required>
+        <input type="text" name="cpf" placeholder="CPF" required>
+        <input type="text" name="telefone" placeholder="Telefone" required>
+        <textarea name="obs" placeholder="Observações..." rows="3" style="width: 100%; box-sizing: border-box;"></textarea> <!--campo para observação aonde consegue escrever sobre o cliente -->
+        <button type="submit">Cadastrar Cliente</button> <!-- botão pra enviar os dados preenchidos no cadastro do cliente-->
+    </form>
+</div>
+
+<div class="card">
+    <h3>Clientes Cadastrados</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Telefone</th>
+            <th>Observação</th>
+        </tr>
+        {% for c in clientes %} <!-- para cada cliente na lista, ele vai criar uma linha na tabela com os dados do cliente -->
+        <tr>
+            <td>{{ c.id }}</td>
+            <td>{{ c.nome }}</td>
+            <td>{{ c.cpf }}</td>
+            <td>{{ c.telefone }}</td>
+            <td>{{ c.obs }}</td>
+        </tr> <!-- puxa o resultado dos dados preenchidos-->
+        {% else %}
+        <tr><td colspan="5">Nenhum cliente cadastrado ainda.</td></tr> <!-- se nao tiver cliente cadastrado vai mostrar que nao possui cadastro-->
+        {% endfor %} 
+        
+    </table>
+</div>
+{% endblock %}

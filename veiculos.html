@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Gestão de Veículos</h2>
+
+<div class="card">
+    <h3>Cadastrar Novo Veículo</h3>
+    <form method="POST">
+        <input type="text" name="modelo" placeholder="Modelo do Veículo" required>
+        <input type="text" name="placa" placeholder="Placa (ex: ABC-1234)" required>
+        <button type="submit">Cadastrar Veículo</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Veículos Cadastrados</h3>
+    
+    <form method="GET" style="margin-bottom: 15px;"> <!--formulario para buscar o veiculo por modelo ou placa -->
+        <input type="text" name="busca" placeholder="Buscar por modelo ou placa..." value="{{ busca }}"> <!--campo para digitar o modelo ou placa do veiculo que deseja buscar-->
+        <button type="submit">Filtrar</button> <!-- botao para enviar a busca e filtrar os resultados -->
+        <a href="{{ url_for('veiculos_page') }}"><button type="button">Limpar Filtro</button></a> <!-- botao para limpar o filtro e mostrar todos os veiculos cadastrados -->
+    </form>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Modelo</th>
+            <th>Placa</th>
+            <th>Status</th>
+            <th>Ação / Cliente</th>
+        </tr>
+        {% for v in veiculos %} <!-- para cada veiculo na lista, ele vai criar uma linha na tabela com os dados do veiculo -->
+        <tr>
+            <td>{{ v.id }}</td>
+            <td>{{ v.modelo }}</td>
+            <td>{{ v.placa }}</td>
+            <td class="{% if v.status == 'Disponível' %}badge-disponivel{% else %}badge-alugado{% endif %}"> 
+                {{ v.status }} <!-- mostra o status do veiculo, se esta disponivel ou alugado e muda a cor do texto de acordo com o status -->
+            </td>
+            <td>
+                <form action="{{ url_for('alugar_veiculo', veiculo_id=v.id) }}" method="POST" style="display:inline;"> <!-- formulario para alugar o veiculo -->
+                    {% if v.status == 'Disponível' %} <!-- se o veiculo estiver disponivel -->
+                        <select name="cliente_id" required>
+                            <option value="">Selecione o Cliente...</option>
+                            {% for c in clientes %}
+                                <option value="{{ c.id }}">{{ c.nome }} ({{ c.cpf }})</option> <!-- mostra o nome e cpf do cliente para selecionar quem vai alugar o veiculo -->
+                            {% endfor %}
+                        </select>
+                        <button type="submit">Alugar</button> <!-- botao para enviar o formulario e alugar o veiculo para o cliente selecionado -->
+                    {% else %}
+                        {% for c in clientes %}{% if c.id == v.cliente_id %} Alugado por: {{ c.nome }} {% endif %}{% endfor %}
+                        <button type="submit">Devolver</button> <!-- botao para enviar o formulario e devolver o veiculo, mudando o status para disponivel novamente -->
+                    {% endif %}
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">Nenhum veículo encontrado.</td></tr> <!-- se nao tiver nenhum veiculo cadastrado ou nenhum veiculo encontrado com a busca, vai mostrar que nao possui veiculo cadastrado -->
+        {% endfor %}
+        
+    </table>
+</div>
+{% endblock %}

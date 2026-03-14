@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"> <!-- aceitar caracteres de acento -->
+    <title>Controle de Aluguel de Veiculoscl</title> <!-- nome no navegador -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!--puxa o css para o html -->
+</head>
+<body>
+    <header>
+        <nav> <!--barra de navegação para ir para paginas -->
+            <a href="{{ url_for('veiculos_page') }}">Veículos</a>
+            <a href="{{ url_for('clientes_page') }}">Clientes</a>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %} <!-- bloco de conteúdo para ser preenchido pelos outros templates -->
+    </main>
+</body>
+</html>
